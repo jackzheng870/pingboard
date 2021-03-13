@@ -14,13 +14,31 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class PingboardCommand implements CommandExecutor {
+    private PingboardPlugin plugin;
+
+    public PingboardCommand(PingboardPlugin pingboardPlugin) {
+        plugin = pingboardPlugin;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            ((Player) sender).setScoreboard(getBoard());
-        } else {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("This commmand can only be used by the player.");
+            return true;
         }
+
+        Player player = (Player) sender;
+        String playerName = player.getName();
+
+        if (plugin.getConfig().getBoolean(playerName)) {
+            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+            plugin.getConfig().set(playerName, false);
+        } else {
+            player.setScoreboard(getBoard());
+            plugin.getConfig().set(playerName, true);
+        }
+
+        plugin.saveConfig();
         return true;
     }
 

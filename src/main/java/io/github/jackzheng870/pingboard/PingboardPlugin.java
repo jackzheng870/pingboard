@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PingboardPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
-        getCommand("pingboard").setExecutor(new PingboardCommand());
+        getCommand("pingboard").setExecutor(new PingboardCommand(this));
         getLogger().info("Pingboard has been enabled.");
     }
 
