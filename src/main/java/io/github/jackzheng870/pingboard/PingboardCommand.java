@@ -27,7 +27,7 @@ public class PingboardCommand implements CommandExecutor {
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
             plugin.getConfig().set(playerName, false);
         } else {
-            player.setScoreboard(plugin.getBoard());
+            player.setScoreboard(plugin.pingboard);
             plugin.getConfig().set(playerName, true);
         }
 

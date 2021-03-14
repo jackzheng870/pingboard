@@ -1,5 +1,6 @@
 package io.github.jackzheng870.pingboard;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +20,11 @@ public class PingboardListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                keepDisplaying(event.getPlayer());
+                plugin.pingboard = plugin.getBoard();
+
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    keepDisplaying(player);
+                });
             }
         }.runTaskLater(plugin, 1);
     }
@@ -31,7 +36,7 @@ public class PingboardListener implements Listener {
 
     private void keepDisplaying(Player player) {
         if (plugin.getConfig().getBoolean(player.getName())) {
-            player.setScoreboard(plugin.getBoard());
+            player.setScoreboard(plugin.pingboard);
         }
     }
 }

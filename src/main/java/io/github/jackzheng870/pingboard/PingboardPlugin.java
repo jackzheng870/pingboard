@@ -10,6 +10,8 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class PingboardPlugin extends JavaPlugin {
+    Scoreboard pingboard;
+
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(new PingboardListener(this), this);
