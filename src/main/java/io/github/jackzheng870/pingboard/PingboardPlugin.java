@@ -1,11 +1,9 @@
 package io.github.jackzheng870.pingboard;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -32,12 +30,12 @@ public class PingboardPlugin extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             Score score = objective.getScore(player.getName());
 
-            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     score.setScore(getPing(player));
                 }
-            }, 0, 1, TimeUnit.SECONDS);
+            }.runTaskTimer(this, 0, 20);
         }
         return scoreboard;
     }
