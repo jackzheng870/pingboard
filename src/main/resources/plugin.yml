@@ -1,6 +1,6 @@
 main: io.github.jackzheng870.pingboard.PingboardPlugin
-name: Pingboard
-version: 0.1.0
+name: ${project.name}
+version: ${project.version}
 api-version: 1.16
 author: Jack Zheng
 website: https://github.com/jackzheng870/pingboard
