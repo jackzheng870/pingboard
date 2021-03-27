@@ -6,6 +6,6 @@ author: Jack Zheng
 website: https://github.com/jackzheng870/pingboard
 commands:
   pingboard:
-    description: Show pingboard.
+    description: Toggle Pingboard.
     usage: /<command>
     aliases: pb

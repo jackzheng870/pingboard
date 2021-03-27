@@ -3,14 +3,16 @@ package io.github.jackzheng870.pingboard;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
 
 public class PingboardCommand implements CommandExecutor {
     private PingboardPlugin plugin;
+    private PingboardCore core;
 
-    public PingboardCommand(PingboardPlugin pingboardPlugin) {
-        plugin = pingboardPlugin;
+    public PingboardCommand(PingboardPlugin plugin, PingboardCore core) {
+        this.plugin = plugin;
+        this.core = core;
     }
 
     @Override
@@ -20,18 +22,22 @@ public class PingboardCommand implements CommandExecutor {
             return true;
         }
 
-        Player player = (Player) sender;
+        togglePingboard((Player) sender);
+        return true;
+    }
+
+    private void togglePingboard(Player player) {
+        FileConfiguration config = plugin.getConfig();
         String playerName = player.getName();
 
-        if (plugin.getConfig().getBoolean(playerName)) {
-            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-            plugin.getConfig().set(playerName, false);
+        if (config.getBoolean(playerName)) {
+            config.set(playerName, false);
+            core.removePlayer(player);
         } else {
-            player.setScoreboard(plugin.pingboard);
-            plugin.getConfig().set(playerName, true);
+            config.set(playerName, true);
+            core.addPlayer(player);
         }
 
         plugin.saveConfig();
-        return true;
     }
 }

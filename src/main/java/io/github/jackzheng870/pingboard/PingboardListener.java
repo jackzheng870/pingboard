@@ -1,18 +1,20 @@
 package io.github.jackzheng870.pingboard;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PingboardListener implements Listener {
     private PingboardPlugin plugin;
+    private PingboardCore core;
 
-    public PingboardListener(PingboardPlugin pingboardPlugin) {
-        plugin = pingboardPlugin;
+    public PingboardListener(PingboardPlugin plugin, PingboardCore core) {
+        this.plugin = plugin;
+        this.core = core;
     }
 
     @EventHandler
@@ -20,23 +22,20 @@ public class PingboardListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                plugin.pingboard = plugin.getBoard();
-
-                Bukkit.getOnlinePlayers().forEach(player -> {
-                    keepDisplaying(player);
-                });
+                Player player = event.getPlayer();
+                core.addEntry(player);
+                core.keepDisplaying(player);
             }
         }.runTaskLater(plugin, 1);
     }
 
     @EventHandler
-    public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-        keepDisplaying(event.getPlayer());
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        core.removeEntry(event.getPlayer());
     }
 
-    private void keepDisplaying(Player player) {
-        if (plugin.getConfig().getBoolean(player.getName())) {
-            player.setScoreboard(plugin.pingboard);
-        }
+    @EventHandler
+    public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+        core.keepDisplaying(event.getPlayer());
     }
 }
