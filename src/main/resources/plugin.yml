@@ -1,9 +1,10 @@
 main: io.github.jackzheng870.pingboard.PingboardPlugin
 name: ${project.name}
 version: ${project.version}
+description: Show the ping of all players on the scoreboard.
 api-version: 1.16
 author: Jack Zheng
-website: https://github.com/jackzheng870/pingboard
+website: ${project.url}
 commands:
   pingboard:
     description: Toggle Pingboard.
