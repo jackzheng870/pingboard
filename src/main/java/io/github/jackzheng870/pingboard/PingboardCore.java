@@ -25,11 +25,19 @@ public class PingboardCore {
 
     void addEntry(Player player) {
         String playerName = player.getName();
+        Score score = objective.getScore(playerName);
 
-        if (updatePingTasks.get(playerName) != null) {
-            updatePingTasks.remove(playerName).cancel();
+        BukkitTask newTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                score.setScore(getPing(player));
+            }
+        }.runTaskTimer(plugin, 0, 20);
+
+        BukkitTask oldTask = updatePingTasks.put(playerName, newTask);
+        if (oldTask != null) {
+            oldTask.cancel();
         }
-        updatePing(objective.getScore(playerName), player);
     }
 
     void removeEntry(Player player) {
@@ -69,17 +77,6 @@ public class PingboardCore {
             addEntry(player);
             keepDisplaying(player);
         });
-    }
-
-    private void updatePing(Score score, Player player) {
-        BukkitTask task = new BukkitRunnable() {
-            @Override
-            public void run() {
-                score.setScore(getPing(player));
-            }
-        }.runTaskTimer(plugin, 0, 20);
-
-        updatePingTasks.put(player.getName(), task);
     }
 
     private int getPing(Player player) {
