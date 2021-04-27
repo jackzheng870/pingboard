@@ -17,12 +17,11 @@ public class PingboardCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (sender instanceof Player) {
+            togglePingboard((Player) sender);
+        } else {
             sender.sendMessage("This commmand can only be used by the player.");
-            return true;
         }
-
-        togglePingboard((Player) sender);
         return true;
     }
 
