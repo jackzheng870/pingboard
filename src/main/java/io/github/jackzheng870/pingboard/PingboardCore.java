@@ -14,7 +14,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class PingboardCore {
     private PingboardPlugin plugin;
-    private Scoreboard pingboard;
+    private Scoreboard scoreboard;
     private Objective objective;
     private HashMap<String, BukkitTask> updatePingTasks = new HashMap<>();
 
@@ -44,11 +44,11 @@ public class PingboardCore {
         String playerName = player.getName();
 
         updatePingTasks.remove(playerName).cancel();
-        pingboard.resetScores(playerName);
+        scoreboard.resetScores(playerName);
     }
 
     void addPlayer(Player player) {
-        player.setScoreboard(pingboard);
+        player.setScoreboard(scoreboard);
     }
 
     void removePlayer(Player player) {
@@ -64,12 +64,9 @@ public class PingboardCore {
     }
 
     private void newPingboard() {
-        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective("pingboard", "dummy", "Pingboard");
+        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        objective = scoreboard.registerNewObjective("pingboard", "dummy", "Pingboard");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        this.pingboard = scoreboard;
-        this.objective = objective;
     }
 
     private void refreshForPlayers() {
