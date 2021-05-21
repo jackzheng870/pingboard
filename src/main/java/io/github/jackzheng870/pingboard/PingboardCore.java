@@ -20,24 +20,23 @@ public class PingboardCore {
 
     public PingboardCore(PingboardPlugin plugin) {
         this.plugin = plugin;
-        newPingboard();
+        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        objective = scoreboard.registerNewObjective("pingboard", "dummy", "Pingboard");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
     void addEntry(Player player) {
         String playerName = player.getName();
         Score score = objective.getScore(playerName);
 
-        BukkitTask newTask = new BukkitRunnable() {
+        BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
                 score.setScore(getPing(player));
             }
         }.runTaskTimer(plugin, 0, 20);
 
-        BukkitTask oldTask = updatePingTasks.put(playerName, newTask);
-        if (oldTask != null) {
-            oldTask.cancel();
-        }
+        updatePingTasks.put(playerName, task);
     }
 
     void removeEntry(Player player) {
@@ -52,28 +51,7 @@ public class PingboardCore {
     }
 
     void removePlayer(Player player) {
-        player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-        newPingboard();
-        refreshForPlayers();
-    }
-
-    void keepDisplaying(Player player) {
-        if (plugin.getConfig().getBoolean(player.getName())) {
-            addPlayer(player);
-        }        
-    }
-
-    private void newPingboard() {
-        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        objective = scoreboard.registerNewObjective("pingboard", "dummy", "Pingboard");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-    }
-
-    private void refreshForPlayers() {
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            addEntry(player);
-            keepDisplaying(player);
-        });
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
     private int getPing(Player player) {

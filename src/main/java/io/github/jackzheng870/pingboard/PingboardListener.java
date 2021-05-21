@@ -24,7 +24,7 @@ public class PingboardListener implements Listener {
             public void run() {
                 Player player = event.getPlayer();
                 core.addEntry(player);
-                core.keepDisplaying(player);
+                keepDisplaying(player);
             }
         }.runTaskLater(plugin, 1);
     }
@@ -36,6 +36,12 @@ public class PingboardListener implements Listener {
 
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-        core.keepDisplaying(event.getPlayer());
+        keepDisplaying(event.getPlayer());
+    }
+
+    private void keepDisplaying(Player player) {
+        if (plugin.getConfig().getBoolean(player.getName())) {
+            core.addPlayer(player);
+        }
     }
 }
