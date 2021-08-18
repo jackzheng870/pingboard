@@ -58,8 +58,10 @@ public class PingboardCore {
         try {
             Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
             return entityPlayer.getClass().getField("ping").getInt(entityPlayer);
+        } catch (NoSuchFieldException e) {
+            return player.getPing();
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException | NoSuchFieldException e) {
+                | SecurityException e) {
             e.printStackTrace();
         }
         return 0;
