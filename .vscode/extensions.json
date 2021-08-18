@@ -1,7 +1,5 @@
 {
     "recommendations": [
-        "redhat.java",
-        "vscjava.vscode-java-dependency",
-        "vscjava.vscode-maven"
+        "vscjava.vscode-java-pack"
     ]
 }
